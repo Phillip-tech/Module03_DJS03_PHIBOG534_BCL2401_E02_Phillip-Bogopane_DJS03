@@ -251,8 +251,11 @@ updateButtonLabel() {
 
     button.innerText = `Show more (${remaining})`;
     button.disabled = remaining <= 0;
+  }
 }
-}
+
+// Initialize book list
+const bookList = new BookList();
 
 
     document.querySelector('[data-list-items]').appendChild(newItems)
