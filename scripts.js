@@ -226,6 +226,23 @@ populateAuthorList() {
     }
 }
 
+setTheme(themename) {
+    const getTheme = themename !== undefined ? themename : localStorage.getItem('theme');
+    
+    let theme;
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches || getTheme === 'night') {
+        document.querySelector('[data-settings-theme]').value = 'night';
+        document.documentElement.style.setProperty('--color-dark', '255, 255, 255');
+        document.documentElement.style.setProperty('--color-light', '10, 10, 20');
+        theme = 'night';
+    } else {
+        document.querySelector('[data-settings-theme]').value = 'day';
+        document.documentElement.style.setProperty('--color-dark', '10, 10, 20');
+        document.documentElement.style.setProperty('--color-light', '255, 255, 255')
+        theme = 'day';
+    }
+    localStorage.setItem('theme', theme);
+}
 
 
     document.querySelector('[data-list-items]').appendChild(newItems)
