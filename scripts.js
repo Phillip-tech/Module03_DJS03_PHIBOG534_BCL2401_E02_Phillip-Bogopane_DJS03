@@ -175,6 +175,22 @@ addEventListeners() {
     });
 }
 
+populateGenreList() {
+    const genreSelect = document.querySelector('[data-search-genres]');
+    genreSelect.innerHTML = '';
+
+    const anyOption = document.createElement('option');
+    anyOption.value = 'any';
+    anyOption.innerText = 'All Genres';
+    genreSelect.appendChild(anyOption);
+
+    for (const [id, name] of Object.entries(genres)) {
+        const option = document.createElement('option');
+        option.value = id;
+        option.innerText = name;
+        genreSelect.appendChild(option);
+    }
+}
 
 
 
