@@ -135,35 +135,35 @@ addEventListeners() {
         this.page = 1;
         this.matches = result;
 
-    if (result.length < 1) {
-        document.querySelector('[data-list-message]').classList.add('list__message_show')
-    } else {
-        document.querySelector('[data-list-message]').classList.remove('list__message_show')
-    }
+        if (result.length < 1) {
+            document.querySelector('[data-list-message]').classList.add('list__message_show');
+        } else {
+            document.querySelector('[data-list-message]').classList.remove('list__message_show');
+        }
 
-    document.querySelector('[data-list-items]').innerHTML = ''
-    const newItems = document.createDocumentFragment()
+        this.render();
+        document.querySelector('[data-search-overlay]').open = false;
+    });
 
-    for (const { author, id, image, title } of result.slice(0, BOOKS_PER_PAGE)) {
-        const element = document.createElement('button')
-        element.classList = 'preview'
-        element.setAttribute('data-preview', id)
-    
-        element.innerHTML = `
-            <img
-                class="preview__image"
-                src="${image}"
-            />
+    document.querySelector('[data-list-items]').addEventListener('click', (event) => {
+        const pathArray = Array.from(event.path || event.composedPath());
+        let active = null;
+
+        for (const node of pathArray) {
+            if (active) break;
+
+            if (node?.dataset?.preview) {
+                let result = null;
+
+                for (const singleBook of books) {
+                    if (result) break;
+                    if (singleBook.id === node?.dataset?.preview) result = singleBook;
+                } 
             
-            <div class="preview__info">
-                <h3 class="preview__title">${title}</h3>
-                <div class="preview__author">${authors[author]}</div>
-            </div>
-        `
-
-        newItems.appendChild(element)
-    }
-
+                active = result;
+            }
+        }
+        
     document.querySelector('[data-list-items]').appendChild(newItems)
     document.querySelector('[data-list-button]').disabled = (matches.length - (page * BOOKS_PER_PAGE)) < 1
 
