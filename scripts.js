@@ -70,88 +70,70 @@ render() {
     this.updateButtonLabel();
 }
 
-document.querySelector('[data-search-authors]').appendChild(authorsHtml)
+addEventListeners() {
+    // Event listener for loading more books
+    document.querySelector('[data-list-button]').addEventListener('click', () => {
+        this.page++;
+        this.render();
+    });
 
-if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-    document.querySelector('[data-settings-theme]').value = 'night'
-    document.documentElement.style.setProperty('--color-dark', '255, 255, 255');
-    document.documentElement.style.setProperty('--color-light', '10, 10, 20');
-} else {
-    document.querySelector('[data-settings-theme]').value = 'day'
-    document.documentElement.style.setProperty('--color-dark', '10, 10, 20');
-    document.documentElement.style.setProperty('--color-light', '255, 255, 255');
-}
+    // Event listeners for UI elements
+    document.querySelector('[data-search-cancel]').addEventListener('click', () => {
+        document.querySelector('[data-search-overlay]').open = false;
+    });
 
-document.querySelector('[data-list-button]').innerText = `Show more (${books.length - BOOKS_PER_PAGE})`
-document.querySelector('[data-list-button]').disabled = (matches.length - (page * BOOKS_PER_PAGE)) > 0
+    document.querySelector('[data-settings-cancel]').addEventListener('click', () => {
+        document.querySelector('[data-settings-overlay]').open = false;
+    });
 
-document.querySelector('[data-list-button]').innerHTML = `
-    <span>Show more</span>
-    <span class="list__remaining"> (${(matches.length - (page * BOOKS_PER_PAGE)) > 0 ? (matches.length - (page * BOOKS_PER_PAGE)) : 0})</span>
-`
+    document.querySelector('[data-header-search]').addEventListener('click', () => {
+        document.querySelector('[data-search-overlay]').open = true;
+        document.querySelector('[data-search-title]').focus();
+    });
 
-document.querySelector('[data-search-cancel]').addEventListener('click', () => {
-    document.querySelector('[data-search-overlay]').open = false
-})
+    document.querySelector('[data-header-settings]').addEventListener('click', () => {
+        document.querySelector('[data-settings-overlay]').open = true;
+    });
 
-document.querySelector('[data-settings-cancel]').addEventListener('click', () => {
-    document.querySelector('[data-settings-overlay]').open = false
-})
+    document.querySelector('[data-list-close]').addEventListener('click', () => {
+        document.querySelector('[data-list-active]').open = false;
+    });
 
-document.querySelector('[data-header-search]').addEventListener('click', () => {
-    document.querySelector('[data-search-overlay]').open = true 
-    document.querySelector('[data-search-title]').focus()
-})
+    document.querySelector('[data-settings-form]').addEventListener('submit', (event) => {
+        event.preventDefault();
+        const formData = new FormData(event.target);
+        const { theme } = Object.fromEntries(formData);
 
-document.querySelector('[data-header-settings]').addEventListener('click', () => {
-    document.querySelector('[data-settings-overlay]').open = true 
-})
+        this.setTheme(theme);
 
-document.querySelector('[data-list-close]').addEventListener('click', () => {
-    document.querySelector('[data-list-active]').open = false
-})
+        document.querySelector('[data-settings-overlay]').open = false;
+    });
 
-document.querySelector('[data-settings-form]').addEventListener('submit', (event) => {
-    event.preventDefault()
-    const formData = new FormData(event.target)
-    const { theme } = Object.fromEntries(formData)
+    document.querySelector('[data-search-form]').addEventListener('submit', (event) => {
+        event.preventDefault();
+        const formData = new FormData(event.target);
+        const filters = Object.fromEntries(formData);
+        const result = [];
 
-    if (theme === 'night') {
-        document.documentElement.style.setProperty('--color-dark', '255, 255, 255');
-        document.documentElement.style.setProperty('--color-light', '10, 10, 20');
-    } else {
-        document.documentElement.style.setProperty('--color-dark', '10, 10, 20');
-        document.documentElement.style.setProperty('--color-light', '255, 255, 255');
-    }
-    
-    document.querySelector('[data-settings-overlay]').open = false
-})
+        for (const book of books) {
+            let genreMatch = filters.genre === 'any';
 
-document.querySelector('[data-search-form]').addEventListener('submit', (event) => {
-    event.preventDefault()
-    const formData = new FormData(event.target)
-    const filters = Object.fromEntries(formData)
-    const result = []
+            for (const singleGenre of book.genres) {
+                if (genreMatch) break;
+                if (singleGenre === filters.genre) { genreMatch = true; }
+            }
 
-    for (const book of books) {
-        let genreMatch = filters.genre === 'any'
-
-        for (const singleGenre of book.genres) {
-            if (genreMatch) break;
-            if (singleGenre === filters.genre) { genreMatch = true }
+            if (
+                (filters.title.trim() === '' || book.title.toLowerCase().includes(filters.title.toLowerCase())) && 
+                (filters.author === 'any' || book.author === filters.author) && 
+                genreMatch
+            ) {
+                result.push(book);
+            }
         }
 
-        if (
-            (filters.title.trim() === '' || book.title.toLowerCase().includes(filters.title.toLowerCase())) && 
-            (filters.author === 'any' || book.author === filters.author) && 
-            genreMatch
-        ) {
-            result.push(book)
-        }
-    }
-
-    page = 1;
-    matches = result
+        this.page = 1;
+        this.matches = result;
 
     if (result.length < 1) {
         document.querySelector('[data-list-message]').classList.add('list__message_show')
