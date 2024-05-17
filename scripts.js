@@ -41,19 +41,33 @@ for (const [id, name] of Object.entries(genres)) {
     genreHtml.appendChild(element)
 }
 
-document.querySelector('[data-search-genres]').appendChild(genreHtml)
+render() {
+    const fragment = document.createDocumentFragment();
+    const listItems = document.querySelector('[data-list-items]');
+    
+    listItems.innerHTML = '';
 
-const authorsHtml = document.createDocumentFragment()
-const firstAuthorElement = document.createElement('option')
-firstAuthorElement.value = 'any'
-firstAuthorElement.innerText = 'All Authors'
-authorsHtml.appendChild(firstAuthorElement)
+    const startIdx = (this.page - 1) * BOOKS_PER_PAGE;
+    const endIdx = startIdx + BOOKS_PER_PAGE;
 
-for (const [id, name] of Object.entries(authors)) {
-    const element = document.createElement('option')
-    element.value = id
-    element.innerText = name
-    authorsHtml.appendChild(element)
+    this.matches.slice(startIdx, endIdx).forEach(({ id, title, author, image }) => {
+        const element = document.createElement('button');
+        element.classList.add('preview');
+        element.setAttribute('data-preview', id);
+
+        element.innerHTML = `
+            <img class="preview__image" src="${image}" />
+            <div class="preview__info">
+                <h3 class="preview__title">${title}</h3>
+                <div class="preview__author">${authors[author]}</div>
+            </div>
+        `;
+        
+        fragment.appendChild(element);
+    });
+
+    listItems.appendChild(fragment);
+    this.updateButtonLabel();
 }
 
 document.querySelector('[data-search-authors]').appendChild(authorsHtml)
