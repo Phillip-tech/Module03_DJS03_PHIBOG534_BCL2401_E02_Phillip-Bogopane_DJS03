@@ -209,6 +209,23 @@ populateAuthorList() {
     }
 }
 
+populateAuthorList() {
+    const authorSelect = document.querySelector('[data-search-authors]');
+    authorSelect.innerHTML = '';
+
+    const anyOption = document.createElement('option');
+    anyOption.value = 'any';
+    anyOption.innerText = 'All Authors';
+    authorSelect.appendChild(anyOption);
+
+    for (const [id, name] of Object.entries(authors)) {
+        const option = document.createElement('option');
+        option.value = id;
+        option.innerText = name;
+        authorSelect.appendChild(option);
+    }
+}
+
 
 
     document.querySelector('[data-list-items]').appendChild(newItems)
