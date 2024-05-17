@@ -94,53 +94,65 @@ addEventListeners() {
 
         document.querySelector('[data-settings-overlay]').open = false;
     });
-
+  
+    // Event listener for search form submission
     document.querySelector('[data-search-form]').addEventListener('submit', (event) => {
-        event.preventDefault();
+        event.preventDefault();// Prevents the default form submission behavior
+
+        // Collect form data and convert to an object
         const formData = new FormData(event.target);
         const filters = Object.fromEntries(formData);
         const result = [];
 
+         // Loop through books and apply filters
         for (const book of books) {
             let genreMatch = filters.genre === 'any';
 
+          // Check if the book's genres match the selected genre
             for (const singleGenre of book.genres) {
                 if (genreMatch) break;
                 if (singleGenre === filters.genre) { genreMatch = true; }
             }
 
+            // Check if the book matches the title, author, and genre filters
             if (
                 (filters.title.trim() === '' || book.title.toLowerCase().includes(filters.title.toLowerCase())) && 
                 (filters.author === 'any' || book.author === filters.author) && 
                 genreMatch
             ) {
-                result.push(book);
+                result.push(book);// Add matching book to the results
             }
         }
-
+        
+        // Update the matches and reset to the first page
         this.page = 1;
         this.matches = result;
-
+        
+        // Show or hide the 'no results' message based on the results length
         if (result.length < 1) {
             document.querySelector('[data-list-message]').classList.add('list__message_show');
         } else {
             document.querySelector('[data-list-message]').classList.remove('list__message_show');
         }
-
+        
+        // Call a render method to update the UI with results
         this.render();
         document.querySelector('[data-search-overlay]').open = false;
     });
-
+    
+    // Event listener for clicking on list items
     document.querySelector('[data-list-items]').addEventListener('click', (event) => {
         const pathArray = Array.from(event.path || event.composedPath());
         let active = null;
-
+        
+        // Traverse the path to find the book preview element
         for (const node of pathArray) {
             if (active) break;
 
             if (node?.dataset?.preview) {
                 let result = null;
 
+              // Find the corresponding book data by ID
                 for (const singleBook of books) {
                     if (result) break;
                     if (singleBook.id === node?.dataset?.preview) result = singleBook;
@@ -149,7 +161,8 @@ addEventListeners() {
                 active = result;
             }
         }
-
+        
+        // Update the UI with the active book's details if found
         if (active) {
             document.querySelector('[data-list-active]').open = true;
             document.querySelector('[data-list-blur]').src = active.image;
@@ -161,15 +174,18 @@ addEventListeners() {
     });
 }
 
+// Function to populate the genre dropdown
 populateGenreList() {
     const genreSelect = document.querySelector('[data-search-genres]');
     genreSelect.innerHTML = '';
 
+    // Add an option for all genres
     const anyOption = document.createElement('option');
     anyOption.value = 'any';
     anyOption.innerText = 'All Genres';
     genreSelect.appendChild(anyOption);
 
+     // Add options for each genre 
     for (const [id, name] of Object.entries(genres)) {
         const option = document.createElement('option');
         option.value = id;
@@ -177,16 +193,18 @@ populateGenreList() {
         genreSelect.appendChild(option);
     }
 }
-
+// Function to populate the author dropdown (duplicated)
 populateAuthorList() {
     const authorSelect = document.querySelector('[data-search-authors]');
     authorSelect.innerHTML = '';
-
+    
+    // Add an option for all authors
     const anyOption = document.createElement('option');
     anyOption.value = 'any';
     anyOption.innerText = 'All Authors';
     authorSelect.appendChild(anyOption);
 
+     // Add options for each author
     for (const [id, name] of Object.entries(authors)) {
         const option = document.createElement('option');
         option.value = id;
@@ -195,23 +213,7 @@ populateAuthorList() {
     }
 }
 
-populateAuthorList() {
-    const authorSelect = document.querySelector('[data-search-authors]');
-    authorSelect.innerHTML = '';
-
-    const anyOption = document.createElement('option');
-    anyOption.value = 'any';
-    anyOption.innerText = 'All Authors';
-    authorSelect.appendChild(anyOption);
-
-    for (const [id, name] of Object.entries(authors)) {
-        const option = document.createElement('option');
-        option.value = id;
-        option.innerText = name;
-        authorSelect.appendChild(option);
-    }
-}
-
+// Function to set the theme
 setTheme(themename) {
     const getTheme = themename !== undefined ? themename : localStorage.getItem('theme');
     
@@ -227,10 +229,10 @@ setTheme(themename) {
         document.documentElement.style.setProperty('--color-light', '255, 255, 255')
         theme = 'day';
     }
-    localStorage.setItem('theme', theme);
+    localStorage.setItem('theme', theme);// Save the theme preference
 }
 
-
+// Function to update the 'show more' button label
 updateButtonLabel() {
     const remaining = Math.max(0, this.matches.length - (this.page * BOOKS_PER_PAGE));
     const button = document.querySelector('[data-list-button]');
