@@ -245,6 +245,16 @@ setTheme(themename) {
 }
 
 
+updateButtonLabel() {
+    const remaining = Math.max(0, this.matches.length - (this.page * BOOKS_PER_PAGE));
+    const button = document.querySelector('[data-list-button]');
+
+    button.innerText = `Show more (${remaining})`;
+    button.disabled = remaining <= 0;
+}
+}
+
+
     document.querySelector('[data-list-items]').appendChild(newItems)
     document.querySelector('[data-list-button]').disabled = (matches.length - (page * BOOKS_PER_PAGE)) < 1
 
