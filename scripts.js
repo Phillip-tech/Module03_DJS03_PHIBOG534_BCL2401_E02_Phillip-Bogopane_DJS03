@@ -1,30 +1,31 @@
-import { books, authors, genres, BOOKS_PER_PAGE } from './data.js'
 
-let page = 1;
-let matches = books
 
-const starting = document.createDocumentFragment()
+import { books, authors, genres, BOOKS_PER_PAGE } from './data.js';
 
-for (const { author, id, image, title } of matches.slice(0, BOOKS_PER_PAGE)) {
-    const element = document.createElement('button')
-    element.classList = 'preview'
-    element.setAttribute('data-preview', id)
-
-    element.innerHTML = `
-        <img
-            class="preview__image"
-            src="${image}"
-        />
-        
-        <div class="preview__info">
-            <h3 class="preview__title">${title}</h3>
-            <div class="preview__author">${authors[author]}</div>
-        </div>
-    `
-
-    starting.appendChild(element)
+// Define book object
+class Book {
+    constructor({ id, title, author, image, genres }) {
+        this.id = id;
+        this.title = title;
+        this.author = author;
+        this.image = image;
+        this.genres = genres;
+    }
 }
 
+// Define book list object
+class BookList {
+    constructor() {
+        this.page = 1;
+        this.matches = books.map(bookData => new Book(bookData));
+        this.render();
+        this.addEventListeners();
+        this.populateGenreList();
+        this.populateAuthorList();
+        this.setTheme();
+        this.updateButtonLabel();
+    }
+    
 document.querySelector('[data-list-items]').appendChild(starting)
 
 const genreHtml = document.createDocumentFragment()
