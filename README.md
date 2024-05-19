@@ -1,39 +1,43 @@
-# DJS03 Project Brief: Book Connect - Abstractions
 
-Dive into the delightful world of "Book Connect," where literary adventures await at your fingertips! Browse, explore, and uncover your next great read from a vast, vibrant collection. Whether you're a fan of thrilling mysteries, epic fantasies, or heartwarming romances, "Book Connect" brings the magic of books directly to you. Happy reading! 
+# Refactored Book List Application
 
-The "Book Connect" project provides an opportunity for students to refine a fully functional version of an application. The focus of this project is to enhance the code's maintainability, extendibility, and readability by applying concepts of objects and functions for abstraction. This will not only streamline future modifications but also consolidate students' understanding of higher-level programming concepts, including documentation, Styleguides, and abstraction principles.
+# Description
 
-![alt text](image.png)
+This commit refactors the existing Book Connect list application to improve code readability, maintainability, and functionality. The code has been organized into classes and methods to enhance modularity and ease of understanding.
 
-#### Goals
+# Changes Made
 
-- **Refactor Existing Code**: Analyse and refactor the given JavaScript and HTML code to improve its structure using objects and functions.
-- **Implement Abstraction**: Use abstraction to hide the complex reality while exposing only the necessary parts. This involves creating more generic functions that can perform tasks in a more flexible way.
-- **Documentation**: Write clear comments and documentation for the new code structure to explain the purpose and functionality of code blocks, functions, and objects.
-- **Follow Styleguides**: Adhere to established coding conventions and Styleguides to ensure code readability and maintainability.
+## Class Definitions:
 
-#### Tasks
+Book class: Represents a book object with properties like id, title, author, image, and genres.
+BookList class: Manages the book list, pagination, UI rendering, event handling, filtering, and theme settings.
 
-1. **Code Analysis**: Start by understanding the current implementation of the "Book Connect" application, including its HTML structure and JavaScript functionality.
-2. **Plan Refactoring**: Identify sections of the code that can be made more abstract and modular. Look for patterns and repetitive code that can be simplified.
-3. **Implement Abstraction**:
-   - **Objects**: Define objects to represent key elements of the application, such as books, authors, and genres. Utilise the provided data (e.g., `authors`, `genres`, `books`) to populate these objects.
-   - **Functions**: Create functions that handle repetitive tasks, such as rendering the book list, handling user interactions, and applying filters.
-4. **Enhance Functionality**: Ensure that the application remains fully functional after refactoring. Test all features to confirm that users can still search, filter, and view books as intended.
-5. **Documentation and Comments**: Throughout the refactoring process, document your code. Provide comments that explain the purpose and functionality of objects and functions.
-6. **Adherence to Styleguides**: Ensure your code follows JavaScript and HTML coding standards and best practices for readability and maintainability.
+# Methods Refactored:
 
-#### Discussion and Reflection
+render(): Renders the list of books on the UI based on pagination.
+addEventListeners(): Adds event listeners for buttons, search form, settings form, and list items.
+populateGenreList(): Populates the genre dropdown list.
+populateAuthorList(): Populates the author dropdown list.
+setTheme(): Sets the theme based on user preference or system settings.
+updateButtonLabel(): Updates the label of the 'Show more' button based on remaining books.
 
-After completing the tasks, prepare a brief presentation for your coaching group on the following:
-- The rationale behind the refactoring decisions made, including the choice of objects and functions.
-- How abstraction has made the code more maintainable and extendable.
-- Any challenges faced during the refactoring process and how they were overcome.
-- Reflections on how this exercise has deepened your understanding of JavaScript programming concepts.
+# Abstraction Benefits
 
-#### Submission Guidelines
+Abstraction in the refactored Book List Application has made the code more maintainable and extendable by encapsulating the functionality into separate classes and methods. This approach allows for better organization of code, easier debugging, and the ability to make changes or add new features without affecting other parts of the application.
 
-Submit the refactored version of the "Book Connect" application, including all HTML, CSS, and JavaScript files. Ensure that your code is well-documented and adheres to the specified Styleguides. Include a written report covering the discussion and reflection points outlined above.
+For example, the Book class encapsulates the properties and behavior of a book object, making it easier to manage book-related data. The BookList class handles the management of the book list, pagination, UI rendering, event handling, filtering, and theme settings, providing a clear separation of concerns.
 
-Make sure to submit your project to the LMS on the DJS03 Project Tab.
+By abstracting these functionalities into classes and methods, the code becomes more modular, reusable, and easier to understand. This modular structure also enables easier testing and maintenance of the application in the future. Additionally, the use of methods like render, addEventListeners, populateGenreList, populateAuthorList, setTheme, and updateButtonLabel further enhances the readability and maintainability of the codebase.
+
+Overall, abstraction in the refactored Book List Application promotes code reusability, scalability, and easier maintenance, making it a more robust and flexible solution for managing and displaying a list of books.
+
+# Functionality Added:
+
+Search functionality: Allows users to search for books by title, author, and genre.
+Theme settings: Users can switch between day and night themes.
+Detailed book view: Clicking on a book displays its details in a modal.
+
+# Additional Notes
+The code structure follows best practices for object-oriented design and separation of concerns.
+Event listeners are efficiently managed to handle user interactions and update the UI accordingly.
+The application provides a seamless user experience with improved filtering and theme customization options.
